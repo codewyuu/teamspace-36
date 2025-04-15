@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
@@ -11,8 +12,7 @@ import {
   MoonIcon,
   SunIcon,
   LogOutIcon,
-  FileText,
-  Users
+  FileText
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -162,8 +162,8 @@ const Dashboard = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => {/* TODO: Implement Teamspace functionality */}}>
-                  <Users className="mr-2 h-4 w-4" /> Teamspace
+                <DropdownMenuItem onClick={() => setIsExportDialogOpen(true)}>
+                  <FileText className="mr-2 h-4 w-4" /> Export/Import
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/settings">
