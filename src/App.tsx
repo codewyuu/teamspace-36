@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +10,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import EventPage from "./pages/EventPage";
+import CreateEventPage from "./pages/CreateEventPage";
 import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
@@ -48,6 +50,11 @@ const App = () => {
               <Route path="/" element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/event/new" element={
+                <ProtectedRoute>
+                  <CreateEventPage />
                 </ProtectedRoute>
               } />
               <Route path="/event/:id" element={

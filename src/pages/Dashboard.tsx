@@ -175,9 +175,11 @@ const Dashboard = () => {
       <main className="notion-container py-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Events</h2>
-          <Button onClick={() => window.location.href = "/event/new"}>
-            <PlusIcon className="h-4 w-4 mr-2" />
-            Add Event
+          <Button asChild>
+            <Link to="/event/new">
+              <PlusIcon className="h-4 w-4 mr-2" />
+              Add Event
+            </Link>
           </Button>
         </div>
 
