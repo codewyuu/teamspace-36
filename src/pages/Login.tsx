@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -49,7 +48,7 @@ const Login = () => {
       <div className="w-full max-w-md px-4">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold mb-2">teamspace</h1>
-          <p className="text-muted-foreground">the ultimate collaborating space</p>
+          <p className="text-muted-foreground">The ultimate collaborating space</p>
         </div>
 
         <Card className="glassmorphism">
@@ -114,4 +113,3 @@ const Login = () => {
 };
 
 export default Login;
-
