@@ -124,7 +124,7 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={handleDialogChange}>
-      <DialogContent className="sm:max-w-[650px]" onPointerDownOutside={(e) => e.preventDefault()}>
+      <DialogContent className="sm:max-w-[650px]">
         <DialogHeader>
           <DialogTitle>Import / Export Events</DialogTitle>
         </DialogHeader>
