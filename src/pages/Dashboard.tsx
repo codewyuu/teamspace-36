@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
@@ -24,7 +23,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import ImportExportDialog from "@/components/ImportExportDialog";
 
-// Define Event type locally for now
 interface Event {
   id: string;
   name: string;
@@ -34,7 +32,6 @@ interface Event {
   collaborators: string[];
 }
 
-// Sample data
 const initialEvents: Event[] = [
   {
     id: "1",
@@ -62,11 +59,9 @@ const Dashboard = () => {
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   useEffect(() => {
-    // Load events from localStorage if available
     const savedEvents = localStorage.getItem("eventscribe-events");
     if (savedEvents) {
       try {
-        // Parse dates correctly from JSON
         const parsedEvents = JSON.parse(savedEvents).map((event: any) => ({
           ...event,
           date: new Date(event.date)
@@ -81,7 +76,6 @@ const Dashboard = () => {
     }
   }, []);
 
-  // Save events to localStorage whenever they change
   useEffect(() => {
     if (events.length > 0) {
       localStorage.setItem("eventscribe-events", JSON.stringify(events));
@@ -103,12 +97,10 @@ const Dashboard = () => {
     window.location.href = "/login";
   };
 
-  // Get events from localStorage for export
   const getEvents = () => {
     return events;
   };
 
-  // Handle imported events
   const handleImportEvents = (importedEvents: any[]) => {
     setEvents(importedEvents);
     localStorage.setItem("eventscribe-events", JSON.stringify(importedEvents));
@@ -120,12 +112,11 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border sticky top-0 z-10 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between p-4 notion-container">
           <div className="flex items-center gap-2">
             <CalendarIcon className="h-6 w-6" />
-            <h1 className="text-xl font-semibold">EventScribe</h1>
+            <h1 className="text-xl font-semibold">teamspace</h1>
           </div>
           
           <div className="flex items-center gap-3">
@@ -179,7 +170,6 @@ const Dashboard = () => {
         </div>
       </header>
 
-      {/* Mobile search */}
       <div className="md:hidden p-4 notion-container">
         <div className="relative">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -192,7 +182,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Main content */}
       <main className="notion-container py-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Events</h2>
@@ -204,7 +193,6 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        {/* Dashboard stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Card>
             <CardHeader className="pb-2">
@@ -236,7 +224,6 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Events table */}
         <div className="bg-card/30 p-4 rounded-md border">
           <table className="w-full">
             <thead>
@@ -280,7 +267,6 @@ const Dashboard = () => {
         </div>
       </main>
 
-      {/* Import/Export Dialog */}
       <ImportExportDialog
         open={isExportDialogOpen}
         onOpenChange={setIsExportDialogOpen}

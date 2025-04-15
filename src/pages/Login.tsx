@@ -30,7 +30,7 @@ const Login = () => {
         localStorage.setItem("eventscribe-auth", "true");
         toast({
           title: "Login successful",
-          description: "Welcome to EventScribe",
+          description: "Welcome to teamspace",
         });
         navigate("/");
       } else {
@@ -48,8 +48,8 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md px-4">
         <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-2">EventScribe</h1>
-          <p className="text-muted-foreground">Manage your events with ease</p>
+          <h1 className="text-3xl font-bold mb-2">teamspace</h1>
+          <p className="text-muted-foreground">the ultimate collaborating space</p>
         </div>
 
         <Card className="glassmorphism">
@@ -114,3 +114,4 @@ const Login = () => {
 };
 
 export default Login;
+
