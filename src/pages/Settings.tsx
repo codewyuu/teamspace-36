@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/components/theme-provider";
 import { useToast } from "@/components/ui/use-toast";
-import { ArrowLeftIcon, MoonIcon, SunIcon, FileExportIcon } from "lucide-react";
+import { ArrowLeftIcon, MoonIcon, SunIcon, FileText } from "lucide-react";
 import ImportExportDialog from "@/components/ImportExportDialog";
 
 const Settings = () => {
@@ -126,7 +126,7 @@ const Settings = () => {
                   variant="outline"
                   onClick={() => setIsExportDialogOpen(true)}
                 >
-                  <FileExportIcon className="h-4 w-4 mr-2" />
+                  <FileText className="h-4 w-4 mr-2" />
                   Export/Import
                 </Button>
               </div>
