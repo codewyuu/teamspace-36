@@ -124,7 +124,7 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={handleDialogChange}>
-      <DialogContent className="sm:max-w-[480px]" onPointerDownOutside={(e) => e.preventDefault()}>
+      <DialogContent className="sm:max-w-[650px]" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Import / Export Events</DialogTitle>
         </DialogHeader>
@@ -135,19 +135,19 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
             <TabsTrigger value="export">Export</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="import" className="space-y-3">
-            <p className="text-xs text-muted-foreground">
+          <TabsContent value="import" className="space-y-4">
+            <p className="text-sm text-muted-foreground">
               Paste your JSON data below to import events. Make sure it follows the correct format.
             </p>
             <Textarea 
               placeholder="Paste JSON data here..." 
-              className="h-48 font-mono text-xs"
+              className="h-56 font-mono text-sm"
               value={importData}
               onChange={(e) => setImportData(e.target.value)}
             />
-            <div className="text-xs text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               <p className="font-semibold">Example format:</p>
-              <pre className="bg-muted p-1 rounded-md mt-1 overflow-auto text-xs">
+              <pre className="bg-muted p-2 rounded-md mt-1 overflow-auto text-xs">
                 {exampleTemplate}
               </pre>
             </div>
@@ -163,19 +163,19 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
             </DialogFooter>
           </TabsContent>
           
-          <TabsContent value="export" className="space-y-3">
-            <p className="text-xs text-muted-foreground">
+          <TabsContent value="export" className="space-y-4">
+            <p className="text-sm text-muted-foreground">
               Export your events as a JSON file that you can later import back or use in other applications.
             </p>
             {events.length === 0 ? (
-              <div className="text-center py-6 text-muted-foreground text-xs">
+              <div className="text-center py-6 text-muted-foreground text-sm">
                 No events to export
               </div>
             ) : (
               <>
-                <div className="border rounded-md p-3">
-                  <h3 className="font-medium mb-1 text-sm">Export summary:</h3>
-                  <ul className="list-disc list-inside text-xs space-y-1">
+                <div className="border rounded-md p-4">
+                  <h3 className="font-medium mb-2 text-sm">Export summary:</h3>
+                  <ul className="list-disc list-inside text-sm space-y-1">
                     <li>Total events: {events.length}</li>
                     <li>Format: JSON</li>
                     <li>Fields included: name, date, notes, tags, collaborators</li>
@@ -197,4 +197,3 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
 };
 
 export default ImportExportDialog;
-
