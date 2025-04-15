@@ -11,7 +11,8 @@ import {
   Settings2Icon,
   MoonIcon,
   SunIcon,
-  LogOutIcon 
+  LogOutIcon,
+  FileText
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import ImportExportDialog from "@/components/ImportExportDialog";
 
 // Define Event type locally for now
 interface Event {
@@ -57,6 +59,7 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   useEffect(() => {
     // Load events from localStorage if available
@@ -98,6 +101,21 @@ const Dashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem("eventscribe-auth");
     window.location.href = "/login";
+  };
+
+  // Get events from localStorage for export
+  const getEvents = () => {
+    return events;
+  };
+
+  // Handle imported events
+  const handleImportEvents = (importedEvents: any[]) => {
+    setEvents(importedEvents);
+    localStorage.setItem("eventscribe-events", JSON.stringify(importedEvents));
+    toast({
+      title: "Events imported",
+      description: `Successfully imported ${importedEvents.length} events.`,
+    });
   };
 
   return (
@@ -144,6 +162,9 @@ const Dashboard = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsExportDialogOpen(true)}>
+                  <FileText className="mr-2 h-4 w-4" /> Export/Import
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/settings">
                     <Settings2Icon className="mr-2 h-4 w-4" /> Settings
@@ -258,6 +279,14 @@ const Dashboard = () => {
           )}
         </div>
       </main>
+
+      {/* Import/Export Dialog */}
+      <ImportExportDialog
+        open={isExportDialogOpen}
+        onOpenChange={setIsExportDialogOpen}
+        events={getEvents()}
+        onImport={handleImportEvents}
+      />
     </div>
   );
 };
