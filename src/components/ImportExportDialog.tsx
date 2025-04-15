@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,12 +31,23 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
   const [importData, setImportData] = useState("");
   const { toast } = useToast();
 
-  const handleExport = () => {
+  // Reset import data when dialog is closed
+  useEffect(() => {
+    if (!open) {
+      setImportData("");
+    }
+  }, [open]);
+
+  const handleExport = (e: React.MouseEvent) => {
+    // Prevent event propagation
+    e.preventDefault();
+    e.stopPropagation();
+    
     // Export as JSON
     const dataStr = JSON.stringify(events, null, 2);
     const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
     
-    const exportFileDefaultName = `eventscribe-export-${new Date().toISOString().slice(0, 10)}.json`;
+    const exportFileDefaultName = `teamspace-export-${new Date().toISOString().slice(0, 10)}.json`;
     
     const linkElement = document.createElement("a");
     linkElement.setAttribute("href", dataUri);
@@ -44,7 +55,11 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
     linkElement.click();
   };
 
-  const handleImport = () => {
+  const handleImport = (e: React.MouseEvent) => {
+    // Prevent event propagation
+    e.preventDefault();
+    e.stopPropagation();
+    
     try {
       const parsedData = JSON.parse(importData);
       
@@ -73,6 +88,10 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
       onOpenChange(false);
       setImportData("");
       
+      toast({
+        title: "Import successful",
+        description: `Imported ${processedEvents.length} events successfully.`,
+      });
     } catch (error) {
       toast({
         variant: "destructive",
@@ -94,9 +113,18 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
     }
   ], null, 2);
 
+  // Handle dialog close with cleanup
+  const handleDialogChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      // Ensure state is reset when dialog closes
+      setImportData("");
+    }
+    onOpenChange(newOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+    <Dialog open={open} onOpenChange={handleDialogChange}>
+      <DialogContent className="sm:max-w-[600px]" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Import / Export Events</DialogTitle>
         </DialogHeader>
