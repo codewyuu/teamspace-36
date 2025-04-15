@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/components/theme-provider";
 import { useToast } from "@/components/ui/use-toast";
-import { ArrowLeftIcon, MoonIcon, SunIcon } from "lucide-react";
+import { ArrowLeftIcon, MoonIcon, SunIcon, FileExportIcon } from "lucide-react";
+import ImportExportDialog from "@/components/ImportExportDialog";
 
 const Settings = () => {
   const { theme, setTheme } = useTheme();
@@ -15,6 +16,7 @@ const Settings = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [exportWithImages, setExportWithImages] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   const handleThemeChange = (newTheme: "light" | "dark") => {
     setTheme(newTheme);
@@ -36,6 +38,21 @@ const Settings = () => {
         window.location.href = "/";
       }, 1000);
     }
+  };
+
+  // Get events from localStorage for export
+  const getEvents = () => {
+    const savedEvents = localStorage.getItem("eventscribe-events");
+    return savedEvents ? JSON.parse(savedEvents) : [];
+  };
+
+  // Handle imported events
+  const handleImportEvents = (importedEvents: any[]) => {
+    localStorage.setItem("eventscribe-events", JSON.stringify(importedEvents));
+    toast({
+      title: "Events imported",
+      description: `Successfully imported ${importedEvents.length} events.`,
+    });
   };
 
   return (
@@ -92,6 +109,42 @@ const Settings = () => {
             </div>
           </div>
 
+          {/* Export/Import Section */}
+          <div className="space-y-4">
+            <h2 className="text-lg font-medium">Data Management</h2>
+            <Separator />
+
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="font-medium">Export/Import Events</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Export or import your events data
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsExportDialogOpen(true)}
+                >
+                  <FileExportIcon className="h-4 w-4 mr-2" />
+                  Export/Import
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Clear all application data including events, preferences, and settings
+                </p>
+                <Button
+                  variant="destructive"
+                  onClick={handleClearData}
+                >
+                  Clear All Data
+                </Button>
+              </div>
+            </div>
+          </div>
+
           {/* Preferences Section */}
           <div className="space-y-4">
             <h2 className="text-lg font-medium">Preferences</h2>
@@ -139,24 +192,6 @@ const Settings = () => {
             </div>
           </div>
 
-          {/* Data Management */}
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">Data Management</h2>
-            <Separator />
-
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">
-                Clear all application data including events, preferences, and settings
-              </p>
-              <Button
-                variant="destructive"
-                onClick={handleClearData}
-              >
-                Clear All Data
-              </Button>
-            </div>
-          </div>
-
           {/* About Section */}
           <div className="space-y-4">
             <h2 className="text-lg font-medium">About EventScribe</h2>
@@ -176,6 +211,14 @@ const Settings = () => {
           </div>
         </div>
       </main>
+
+      {/* Import/Export Dialog */}
+      <ImportExportDialog
+        open={isExportDialogOpen}
+        onOpenChange={setIsExportDialogOpen}
+        events={getEvents()}
+        onImport={handleImportEvents}
+      />
     </div>
   );
 };
