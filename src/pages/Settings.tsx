@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,30 +8,32 @@ import { useTheme } from "@/components/theme-provider";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeftIcon, MoonIcon, SunIcon, FileText } from "lucide-react";
 import ImportExportDialog from "@/components/ImportExportDialog";
-
 const Settings = () => {
-  const { theme, setTheme } = useTheme();
-  const { toast } = useToast();
+  const {
+    theme,
+    setTheme
+  } = useTheme();
+  const {
+    toast
+  } = useToast();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [exportWithImages, setExportWithImages] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
-
   const handleThemeChange = (newTheme: "light" | "dark") => {
     setTheme(newTheme);
     toast({
       title: `Theme changed to ${newTheme} mode`,
-      description: `Application appearance has been updated.`,
+      description: `Application appearance has been updated.`
     });
   };
-
   const handleClearData = () => {
     if (confirm("Are you sure you want to clear all application data? This cannot be undone.")) {
       localStorage.clear();
       localStorage.setItem("eventscribe-auth", "true"); // Maintain login
       toast({
         title: "Data cleared",
-        description: "All application data has been reset.",
+        description: "All application data has been reset."
       });
       setTimeout(() => {
         window.location.href = "/";
@@ -51,12 +52,10 @@ const Settings = () => {
     localStorage.setItem("eventscribe-events", JSON.stringify(importedEvents));
     toast({
       title: "Events imported",
-      description: `Successfully imported ${importedEvents.length} events.`,
+      description: `Successfully imported ${importedEvents.length} events.`
     });
   };
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border sticky top-0 z-10 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between p-4 notion-container">
@@ -87,21 +86,11 @@ const Settings = () => {
                 </p>
               </div>
               <div className="flex gap-2">
-                <Button
-                  variant={theme === "light" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleThemeChange("light")}
-                  className="w-24"
-                >
+                <Button variant={theme === "light" ? "default" : "outline"} size="sm" onClick={() => handleThemeChange("light")} className="w-24">
                   <SunIcon className="h-4 w-4 mr-2" />
                   Light
                 </Button>
-                <Button
-                  variant={theme === "dark" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleThemeChange("dark")}
-                  className="w-24"
-                >
+                <Button variant={theme === "dark" ? "default" : "outline"} size="sm" onClick={() => handleThemeChange("dark")} className="w-24">
                   <MoonIcon className="h-4 w-4 mr-2" />
                   Dark
                 </Button>
@@ -122,10 +111,7 @@ const Settings = () => {
                     Export or import your events data
                   </p>
                 </div>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsExportDialogOpen(true)}
-                >
+                <Button variant="outline" onClick={() => setIsExportDialogOpen(true)}>
                   <FileText className="h-4 w-4 mr-2" />
                   Export/Import
                 </Button>
@@ -135,10 +121,7 @@ const Settings = () => {
                 <p className="text-sm text-muted-foreground">
                   Clear all application data including events, preferences, and settings
                 </p>
-                <Button
-                  variant="destructive"
-                  onClick={handleClearData}
-                >
+                <Button variant="destructive" onClick={handleClearData}>
                   Clear All Data
                 </Button>
               </div>
@@ -158,10 +141,7 @@ const Settings = () => {
                     Receive notifications for upcoming events
                   </p>
                 </div>
-                <Switch
-                  checked={notificationsEnabled}
-                  onCheckedChange={setNotificationsEnabled}
-                />
+                <Switch checked={notificationsEnabled} onCheckedChange={setNotificationsEnabled} />
               </div>
 
               <div className="flex justify-between items-center">
@@ -171,10 +151,7 @@ const Settings = () => {
                     Include images when exporting event data
                   </p>
                 </div>
-                <Switch
-                  checked={exportWithImages}
-                  onCheckedChange={setExportWithImages}
-                />
+                <Switch checked={exportWithImages} onCheckedChange={setExportWithImages} />
               </div>
 
               <div className="flex justify-between items-center">
@@ -184,17 +161,14 @@ const Settings = () => {
                     Automatically save changes as you type
                   </p>
                 </div>
-                <Switch
-                  checked={autoSave}
-                  onCheckedChange={setAutoSave}
-                />
+                <Switch checked={autoSave} onCheckedChange={setAutoSave} />
               </div>
             </div>
           </div>
 
           {/* About Section */}
           <div className="space-y-4">
-            <h2 className="text-lg font-medium">About EventScribe</h2>
+            <h2 className="text-lg font-medium">About teamspace</h2>
             <Separator />
 
             <div className="bg-card/30 p-4 rounded-md">
@@ -213,14 +187,7 @@ const Settings = () => {
       </main>
 
       {/* Import/Export Dialog */}
-      <ImportExportDialog
-        open={isExportDialogOpen}
-        onOpenChange={setIsExportDialogOpen}
-        events={getEvents()}
-        onImport={handleImportEvents}
-      />
-    </div>
-  );
+      <ImportExportDialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen} events={getEvents()} onImport={handleImportEvents} />
+    </div>;
 };
-
 export default Settings;
