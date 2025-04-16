@@ -48,15 +48,18 @@ const AnimatedSearchBar = ({
     >
       <div
         className={cn(
-          "flex items-center rounded-full bg-black/70 border border-gray-800 transition-all duration-300 ease-in-out overflow-hidden",
-          isExpanded ? "w-64 pl-4 pr-2 py-2" : "w-10 h-10 cursor-pointer hover:bg-black/90"
+          "flex items-center rounded-full border border-gray-800 transition-all duration-300 ease-in-out overflow-hidden",
+          isExpanded 
+            ? "w-64 pl-4 pr-2 py-2 bg-black/80" 
+            : "w-10 h-10 bg-transparent cursor-pointer hover:bg-black/30"
         )}
         onClick={() => !isExpanded && setIsExpanded(true)}
+        onMouseEnter={() => !isExpanded && setIsExpanded(true)}
       >
         <SearchIcon
           className={cn(
             "text-muted-foreground transition-all duration-200",
-            isExpanded ? "h-4 w-4 mr-2" : "h-4 w-4 mx-auto"
+            isExpanded ? "h-4 w-4 mr-2" : "h-5 w-5 mx-auto"
           )}
         />
         <input
