@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import {
   ArrowLeftIcon,
   CalendarIcon,
-  CheckIcon,
+  FileText,
+  MessageSquare,
+  MessageCircle,
   PlusIcon,
   SaveIcon,
   TagIcon,
@@ -30,7 +31,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Event } from "@/types/event";
+import { Event, Comment } from "@/types/event";
 import { cn } from "@/lib/utils";
 
 const EventPage = () => {
