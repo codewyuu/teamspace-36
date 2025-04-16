@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { PlusIcon, SearchIcon, CalendarIcon, Settings2Icon, MoonIcon, SunIcon, LogOutIcon, FileText } from "lucide-react";
+import { PlusIcon, CalendarIcon, Settings2Icon, MoonIcon, SunIcon, LogOutIcon, FileText } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { PaletteIcon } from "lucide-react";
 import { TAG_COLORS, TagColor, getTagColor, getTagColorClass } from "@/utils/tagColors";
 import { CommentSection } from "@/components/comments/CommentSection";
+import AnimatedSearchBar from "@/components/AnimatedSearchBar";
 
 const initialEvents: Event[] = [{
   id: "1",
@@ -121,10 +121,12 @@ const Dashboard = () => {
           </div>
           
           <div className="flex items-center gap-3">
-            <div className="relative w-64 hidden md:block">
-              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search events..." className="pl-10" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-            </div>
+            <AnimatedSearchBar 
+              placeholder="Search events..." 
+              value={searchTerm} 
+              onChange={setSearchTerm}
+              className="hidden md:block"
+            />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -167,10 +169,11 @@ const Dashboard = () => {
       </header>
 
       <div className="md:hidden p-4 notion-container">
-        <div className="relative">
-          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search events..." className="pl-10" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-        </div>
+        <AnimatedSearchBar 
+          placeholder="Search events..." 
+          value={searchTerm} 
+          onChange={setSearchTerm}
+        />
       </div>
 
       <main className="notion-container py-6">
