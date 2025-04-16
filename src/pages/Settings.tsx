@@ -8,6 +8,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeftIcon, MoonIcon, SunIcon, FileText } from "lucide-react";
 import ImportExportDialog from "@/components/ImportExportDialog";
+import { excelService } from "@/services/excelService";
 const Settings = () => {
   const {
     theme,
@@ -41,15 +42,14 @@ const Settings = () => {
     }
   };
 
-  // Get events from localStorage for export
+  // Get events using Excel service for export
   const getEvents = () => {
-    const savedEvents = localStorage.getItem("eventscribe-events");
-    return savedEvents ? JSON.parse(savedEvents) : [];
+    return excelService.loadEvents();
   };
 
-  // Handle imported events
+  // Handle imported events using Excel service
   const handleImportEvents = (importedEvents: any[]) => {
-    localStorage.setItem("eventscribe-events", JSON.stringify(importedEvents));
+    excelService.saveEvents(importedEvents);
     toast({
       title: "Events imported",
       description: `Successfully imported ${importedEvents.length} events.`

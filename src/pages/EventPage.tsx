@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Event, Comment } from "@/types/event";
 import { cn } from "@/lib/utils";
+import { excelService } from "@/services/excelService";
 
 const EventPage = () => {
   const { id } = useParams();
@@ -56,34 +57,25 @@ const EventPage = () => {
     const fetchEvent = () => {
       setIsLoading(true);
       try {
-        // Load events from localStorage
-        const savedEvents = localStorage.getItem("eventscribe-events");
-        if (savedEvents) {
-          const parsedEvents = JSON.parse(savedEvents).map((e: any) => ({
-            ...e,
-            date: new Date(e.date)
-          }));
-          
-          const foundEvent = parsedEvents.find((e: Event) => e.id === id);
-          if (foundEvent) {
-            setEvent(foundEvent);
-            // Populate form fields
-            setName(foundEvent.name);
-            setDate(new Date(foundEvent.date));
-            setNotes(foundEvent.notes);
-            setTags(foundEvent.tags);
-            setCollaborators(foundEvent.collaborators);
-          } else {
-            // Event not found
-            toast({
-              variant: "destructive",
-              title: "Event not found",
-              description: "The requested event could not be found."
-            });
-            navigate("/");
-          }
+        // Load events using Excel service
+        const allEvents = excelService.loadEvents();
+        
+        const foundEvent = allEvents.find((e: Event) => e.id === id);
+        if (foundEvent) {
+          setEvent(foundEvent);
+          // Populate form fields
+          setName(foundEvent.name);
+          setDate(new Date(foundEvent.date));
+          setNotes(foundEvent.notes);
+          setTags(foundEvent.tags);
+          setCollaborators(foundEvent.collaborators);
         } else {
-          // No events in storage
+          // Event not found
+          toast({
+            variant: "destructive",
+            title: "Event not found",
+            description: "The requested event could not be found."
+          });
           navigate("/");
         }
       } catch (error) {
@@ -105,14 +97,7 @@ const EventPage = () => {
     if (!name || !date) return;
     
     try {
-      // Get all events
-      const savedEvents = localStorage.getItem("eventscribe-events");
-      let allEvents = savedEvents ? JSON.parse(savedEvents).map((e: any) => ({
-        ...e,
-        date: new Date(e.date)
-      })) : [];
-      
-      // Update the event
+      // Update the event using Excel service
       const updatedEvent: Event = {
         id: id!,
         name,
@@ -121,23 +106,20 @@ const EventPage = () => {
         description: event?.description || "",
         tags,
         collaborators,
-        comments: event?.comments || []
+        comments: event?.comments || [],
+        tagColors: event?.tagColors || {}
       };
       
-      // Replace the event in the array
-      const eventIndex = allEvents.findIndex((e: Event) => e.id === id);
-      if (eventIndex !== -1) {
-        allEvents[eventIndex] = updatedEvent;
-        localStorage.setItem("eventscribe-events", JSON.stringify(allEvents));
-        
-        setEvent(updatedEvent);
-        setIsEditMode(false);
-        
-        toast({
-          title: "Event updated",
-          description: "Your changes have been saved."
-        });
-      }
+      // Update the event
+      excelService.updateEvent(updatedEvent);
+      
+      setEvent(updatedEvent);
+      setIsEditMode(false);
+      
+      toast({
+        title: "Event updated",
+        description: "Your changes have been saved."
+      });
     } catch (error) {
       console.error("Error saving event:", error);
       toast({
@@ -150,22 +132,15 @@ const EventPage = () => {
   
   const deleteEvent = () => {
     try {
-      // Get all events
-      const savedEvents = localStorage.getItem("eventscribe-events");
-      if (savedEvents) {
-        const allEvents = JSON.parse(savedEvents);
-        
-        // Filter out the event to delete
-        const filteredEvents = allEvents.filter((e: Event) => e.id !== id);
-        localStorage.setItem("eventscribe-events", JSON.stringify(filteredEvents));
-        
-        toast({
-          title: "Event deleted",
-          description: "The event has been permanently removed."
-        });
-        
-        navigate("/");
-      }
+      // Delete the event using Excel service
+      excelService.deleteEvent(id!);
+      
+      toast({
+        title: "Event deleted",
+        description: "The event has been permanently removed."
+      });
+      
+      navigate("/");
     } catch (error) {
       console.error("Error deleting event:", error);
       toast({

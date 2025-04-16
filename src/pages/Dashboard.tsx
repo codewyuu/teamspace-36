@@ -13,6 +13,7 @@ import { PaletteIcon } from "lucide-react";
 import { TAG_COLORS, TagColor, getTagColor, getTagColorClass } from "@/utils/tagColors";
 import { CommentSection } from "@/components/comments/CommentSection";
 import AnimatedSearchBar from "@/components/AnimatedSearchBar";
+import { excelService } from "@/services/excelService";
 
 const initialEvents: Event[] = [{
   id: "1",
@@ -47,26 +48,28 @@ const Dashboard = () => {
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   useEffect(() => {
-    const savedEvents = localStorage.getItem("eventscribe-events");
-    if (savedEvents) {
-      try {
-        const parsedEvents = JSON.parse(savedEvents).map((event: any) => ({
-          ...event,
-          date: new Date(event.date)
-        }));
-        setEvents(parsedEvents);
-      } catch (e) {
-        console.error("Error parsing events from localStorage", e);
+    try {
+      const savedEvents = excelService.loadEvents();
+      if (savedEvents.length > 0) {
+        setEvents(savedEvents);
+      } else {
         setEvents(initialEvents);
+        // Save initial events if none exist
+        excelService.saveEvents(initialEvents);
       }
-    } else {
+    } catch (e) {
+      console.error("Error loading events from service", e);
       setEvents(initialEvents);
     }
   }, []);
 
   useEffect(() => {
     if (events.length > 0) {
-      localStorage.setItem("eventscribe-events", JSON.stringify(events));
+      try {
+        excelService.saveEvents(events);
+      } catch (e) {
+        console.error("Error saving events to service", e);
+      }
     }
   }, [events]);
 

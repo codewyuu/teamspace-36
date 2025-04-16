@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import CreateEventDialog from "@/components/CreateEventDialog";
 import { Event } from "@/types/event";
+import { excelService } from "@/services/excelService";
 
 const CreateEventPage = () => {
   const navigate = useNavigate();
@@ -15,15 +16,8 @@ const CreateEventPage = () => {
   
   const handleCreateEvent = (event: Event) => {
     try {
-      // Get existing events from localStorage
-      const savedEvents = localStorage.getItem("eventscribe-events");
-      let allEvents = savedEvents ? JSON.parse(savedEvents) : [];
-      
-      // Add the new event
-      allEvents.push(event);
-      
-      // Save back to localStorage
-      localStorage.setItem("eventscribe-events", JSON.stringify(allEvents));
+      // Add the new event using the Excel service
+      excelService.addEvent(event);
       
       toast({
         title: "Event created",
