@@ -113,15 +113,18 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
     }
   ], null, 2);
 
+  // Handle dialog close with cleanup
+  const handleDialogChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      // Ensure state is reset when dialog closes
+      setImportData("");
+    }
+    onOpenChange(newOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent 
-        className="sm:max-w-[650px]"
-        onInteractOutside={(e) => {
-          e.preventDefault();
-          onOpenChange(false);
-        }}
-      >
+    <Dialog open={open} onOpenChange={handleDialogChange}>
+      <DialogContent className="sm:max-w-[650px]">
         <DialogHeader>
           <DialogTitle>Import / Export Events</DialogTitle>
         </DialogHeader>
