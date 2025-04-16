@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,88 +8,85 @@ import { useToast } from "@/components/ui/use-toast";
 import { LockIcon, UserIcon, GithubIcon, MailIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Separator } from "@/components/ui/separator";
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isManualLogin, setIsManualLogin] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleEmailPasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const {
+        data,
+        error
+      } = await supabase.auth.signInWithPassword({
         email,
-        password,
+        password
       });
-
       if (error) throw error;
-
       toast({
         title: "Login successful",
-        description: "Welcome to teamspace",
+        description: "Welcome to teamspace"
       });
-      
       navigate("/");
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: error.message || "Invalid email or password. Please try again.",
+        description: error.message || "Invalid email or password. Please try again."
       });
     } finally {
       setIsLoading(false);
     }
   };
-
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const {
+        error
+      } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin,
-        },
+          redirectTo: window.location.origin
+        }
       });
-
       if (error) throw error;
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Google login failed",
-        description: error.message,
+        description: error.message
       });
       setIsLoading(false);
     }
   };
-
   const handleGithubLogin = async () => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const {
+        error
+      } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: window.location.origin,
-        },
+          redirectTo: window.location.origin
+        }
       });
-
       if (error) throw error;
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "GitHub login failed",
-        description: error.message,
+        description: error.message
       });
       setIsLoading(false);
     }
   };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+  return <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md px-4">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold mb-2">teamspace</h1>
@@ -99,19 +95,14 @@ const Login = () => {
 
         <Card className="glassmorphism">
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-center">Sign In</CardTitle>
+            <CardDescription className="text-center">
               Choose your preferred sign in method
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 gap-3">
-              <Button 
-                variant="outline" 
-                className="w-full" 
-                onClick={handleGoogleLogin}
-                disabled={isLoading}
-              >
+              <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={isLoading}>
                 <svg viewBox="0 0 24 24" className="mr-2 h-4 w-4" aria-hidden="true" fill="currentColor">
                   <path d="M12.0003 4.75C13.7703 4.75 15.3553 5.36002 16.6053 6.54998L20.0303 3.125C17.9502 1.19 15.2353 0 12.0003 0C7.31028 0 3.25526 2.69 1.28027 6.60998L5.27028 9.70498C6.21525 6.86002 8.87028 4.75 12.0003 4.75Z" fill="#EA4335" />
                   <path d="M23.49 12.275C23.49 11.49 23.415 10.73 23.3 10H12V14.51H18.47C18.18 15.99 17.34 17.25 16.08 18.1L19.945 21.1C22.2 19.01 23.49 15.92 23.49 12.275Z" fill="#4285F4" />
@@ -120,28 +111,17 @@ const Login = () => {
                 </svg>
                 Continue with Google
               </Button>
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={handleGithubLogin}
-                disabled={isLoading}
-              >
+              <Button variant="outline" className="w-full" onClick={handleGithubLogin} disabled={isLoading}>
                 <GithubIcon className="mr-2 h-4 w-4" />
                 Continue with GitHub
               </Button>
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={() => setIsManualLogin(!isManualLogin)}
-                disabled={isLoading}
-              >
+              <Button variant="outline" className="w-full" onClick={() => setIsManualLogin(!isManualLogin)} disabled={isLoading}>
                 <MailIcon className="mr-2 h-4 w-4" />
                 Continue with Email
               </Button>
             </div>
 
-            {isManualLogin && (
-              <>
+            {isManualLogin && <>
                 <Separator className="my-4" />
                 <form onSubmit={handleEmailPasswordLogin} className="space-y-4">
                   <div className="space-y-2">
@@ -150,15 +130,7 @@ const Login = () => {
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
                         <MailIcon className="h-4 w-4" />
                       </div>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        className="pl-10"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
+                      <Input id="email" type="email" placeholder="Enter your email" className="pl-10" value={email} onChange={e => setEmail(e.target.value)} required />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -169,23 +141,14 @@ const Login = () => {
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-muted-foreground">
                         <LockIcon className="h-4 w-4" />
                       </div>
-                      <Input
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        className="pl-10"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                      />
+                      <Input id="password" type="password" placeholder="Enter your password" className="pl-10" value={password} onChange={e => setPassword(e.target.value)} required />
                     </div>
                   </div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Signing In..." : "Sign In"}
                   </Button>
                 </form>
-              </>
-            )}
+              </>}
           </CardContent>
           <CardFooter className="flex justify-center text-sm">
             <p className="text-muted-foreground text-xs">
@@ -195,8 +158,6 @@ const Login = () => {
           </CardFooter>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Login;
