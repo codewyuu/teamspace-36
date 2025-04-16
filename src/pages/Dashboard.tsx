@@ -9,6 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import ImportExportDialog from "@/components/ImportExportDialog";
 import { Event, Comment } from "@/types/event";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { PaletteIcon } from "lucide-react";
+import { TAG_COLORS, TagColor, getTagColor, getTagColorClass } from "@/utils/tagColors";
+
 const initialEvents: Event[] = [{
   id: "1",
   name: "Annual Conference",
@@ -28,6 +32,7 @@ const initialEvents: Event[] = [{
   collaborators: ["Jamie Lee", "Taylor Wong"],
   comments: []
 }];
+
 const Dashboard = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,6 +44,7 @@ const Dashboard = () => {
     toast
   } = useToast();
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+
   useEffect(() => {
     const savedEvents = localStorage.getItem("eventscribe-events");
     if (savedEvents) {
@@ -56,22 +62,27 @@ const Dashboard = () => {
       setEvents(initialEvents);
     }
   }, []);
+
   useEffect(() => {
     if (events.length > 0) {
       localStorage.setItem("eventscribe-events", JSON.stringify(events));
     }
   }, [events]);
+
   const filteredEvents = events.filter(event => {
     const searchLower = searchTerm.toLowerCase();
     return event.name.toLowerCase().includes(searchLower) || event.notes.toLowerCase().includes(searchLower) || event.tags.some(tag => tag.toLowerCase().includes(searchLower)) || event.collaborators.some(collab => collab.toLowerCase().includes(searchLower));
   });
+
   const handleLogout = () => {
     localStorage.removeItem("eventscribe-auth");
     window.location.href = "/login";
   };
+
   const getEvents = () => {
     return events;
   };
+
   const handleImportEvents = (importedEvents: any[]) => {
     setEvents(importedEvents);
     localStorage.setItem("eventscribe-events", JSON.stringify(importedEvents));
@@ -80,6 +91,25 @@ const Dashboard = () => {
       description: `Successfully imported ${importedEvents.length} events.`
     });
   };
+
+  const handleTagColorChange = (eventId: string, tag: string, color: TagColor) => {
+    const updatedEvents = events.map(event => {
+      if (event.id === eventId) {
+        const tagColors = event.tagColors || {};
+        return {
+          ...event,
+          tagColors: {
+            ...tagColors,
+            [tag]: color
+          }
+        };
+      }
+      return event;
+    });
+    setEvents(updatedEvents);
+    localStorage.setItem("eventscribe-events", JSON.stringify(updatedEvents));
+  };
+
   return <div className="min-h-screen bg-background">
       <header className="border-b border-border sticky top-0 z-10 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between p-4 notion-container">
@@ -196,14 +226,35 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredEvents.map(event => <tr key={event.id} className="border-t border-border">
+              {filteredEvents.map(event => (
+                <tr key={event.id} className="border-t border-border">
                   <td className="px-4 py-3">{event.name}</td>
                   <td className="px-4 py-3">{event.date.toLocaleDateString()}</td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     <div className="flex flex-wrap gap-1">
-                      {event.tags.map(tag => <span key={tag} className="bg-secondary text-secondary-foreground text-xs rounded-full px-2 py-0.5">
-                          {tag}
-                        </span>)}
+                      {event.tags.map(tag => (
+                        <Popover key={tag}>
+                          <PopoverTrigger asChild>
+                            <div 
+                              className={`${event.tagColors?.[tag] ? getTagColorClass(event.tagColors[tag]) : getTagColorClass(getTagColor(tag))} text-secondary-foreground text-xs rounded-full px-2 py-0.5 cursor-pointer flex items-center gap-1`}
+                            >
+                              {tag}
+                              <PaletteIcon className="h-3 w-3 opacity-50" />
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-32 p-1" align="start">
+                            <div className="grid grid-cols-4 gap-1">
+                              {(Object.keys(TAG_COLORS) as TagColor[]).map((color) => (
+                                <button
+                                  key={color}
+                                  onClick={() => handleTagColorChange(event.id, tag, color)}
+                                  className={`${getTagColorClass(color)} w-6 h-6 rounded-full`}
+                                />
+                              ))}
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      ))}
                     </div>
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
@@ -215,7 +266,8 @@ const Dashboard = () => {
                       <Link to={`/event/${event.id}`}>View</Link>
                     </Button>
                   </td>
-                </tr>)}
+                </tr>
+              ))}
             </tbody>
           </table>
           {filteredEvents.length === 0 && <div className="text-center py-8">
@@ -227,4 +279,5 @@ const Dashboard = () => {
       <ImportExportDialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen} events={getEvents()} onImport={handleImportEvents} />
     </div>;
 };
+
 export default Dashboard;

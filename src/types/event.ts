@@ -1,3 +1,4 @@
+import { TagColor } from "@/utils/tagColors";
 
 export interface Comment {
   id: string;
@@ -11,8 +12,9 @@ export interface Event {
   name: string;
   date: Date;
   notes: string;
-  description: string; // New field for general notes
+  description: string;
   tags: string[];
+  tagColors?: Record<string, TagColor>;
   collaborators: string[];
-  comments: Comment[]; // New field for collaborator comments
+  comments: Comment[];
 }
