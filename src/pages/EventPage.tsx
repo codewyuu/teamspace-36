@@ -18,6 +18,7 @@ import {
   TrashIcon,
   UsersIcon,
   X,
+  PaletteIcon
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -43,7 +44,6 @@ const EventPage = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   
-  // Form state
   const [name, setName] = useState("");
   const [date, setDate] = useState<Date | undefined>();
   const [notes, setNotes] = useState("");
@@ -52,11 +52,49 @@ const EventPage = () => {
   const [collaborator, setCollaborator] = useState("");
   const [collaborators, setCollaborators] = useState<string[]>([]);
   
+  const handleTagColorChange = (tag: string, color: TagColor) => {
+    if (!event) return;
+    
+    try {
+      const updatedEvent = {
+        ...event,
+        tagColors: {
+          ...(event.tagColors || {}),
+          [tag]: color
+        }
+      };
+      
+      const savedEvents = localStorage.getItem("eventscribe-events");
+      let allEvents = savedEvents ? JSON.parse(savedEvents).map((e: any) => ({
+        ...e,
+        date: new Date(e.date)
+      })) : [];
+      
+      const eventIndex = allEvents.findIndex((e: Event) => e.id === id);
+      if (eventIndex !== -1) {
+        allEvents[eventIndex] = updatedEvent;
+        localStorage.setItem("eventscribe-events", JSON.stringify(allEvents));
+        setEvent(updatedEvent);
+        
+        toast({
+          title: "Tag color updated",
+          description: "The tag color has been changed successfully."
+        });
+      }
+    } catch (error) {
+      console.error("Error updating tag color:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update the tag color."
+      });
+    }
+  };
+
   useEffect(() => {
     const fetchEvent = () => {
       setIsLoading(true);
       try {
-        // Load events from localStorage
         const savedEvents = localStorage.getItem("eventscribe-events");
         if (savedEvents) {
           const parsedEvents = JSON.parse(savedEvents).map((e: any) => ({
@@ -67,14 +105,12 @@ const EventPage = () => {
           const foundEvent = parsedEvents.find((e: Event) => e.id === id);
           if (foundEvent) {
             setEvent(foundEvent);
-            // Populate form fields
             setName(foundEvent.name);
             setDate(new Date(foundEvent.date));
             setNotes(foundEvent.notes);
             setTags(foundEvent.tags);
             setCollaborators(foundEvent.collaborators);
           } else {
-            // Event not found
             toast({
               variant: "destructive",
               title: "Event not found",
@@ -83,7 +119,6 @@ const EventPage = () => {
             navigate("/");
           }
         } else {
-          // No events in storage
           navigate("/");
         }
       } catch (error) {
@@ -105,14 +140,12 @@ const EventPage = () => {
     if (!name || !date) return;
     
     try {
-      // Get all events
       const savedEvents = localStorage.getItem("eventscribe-events");
       let allEvents = savedEvents ? JSON.parse(savedEvents).map((e: any) => ({
         ...e,
         date: new Date(e.date)
       })) : [];
       
-      // Update the event
       const updatedEvent: Event = {
         id: id!,
         name,
@@ -124,7 +157,6 @@ const EventPage = () => {
         comments: event?.comments || []
       };
       
-      // Replace the event in the array
       const eventIndex = allEvents.findIndex((e: Event) => e.id === id);
       if (eventIndex !== -1) {
         allEvents[eventIndex] = updatedEvent;
@@ -150,12 +182,10 @@ const EventPage = () => {
   
   const deleteEvent = () => {
     try {
-      // Get all events
       const savedEvents = localStorage.getItem("eventscribe-events");
       if (savedEvents) {
         const allEvents = JSON.parse(savedEvents);
         
-        // Filter out the event to delete
         const filteredEvents = allEvents.filter((e: Event) => e.id !== id);
         localStorage.setItem("eventscribe-events", JSON.stringify(filteredEvents));
         
@@ -210,7 +240,6 @@ const EventPage = () => {
   
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border sticky top-0 z-10 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between p-4 notion-container">
           <div className="flex items-center gap-2">
@@ -257,10 +286,8 @@ const EventPage = () => {
         </div>
       </header>
       
-      {/* Main content */}
       <main className="notion-container py-8">
         <div className="space-y-8 max-w-3xl mx-auto">
-          {/* Date section */}
           <div className="flex items-center gap-4">
             <div className="flex items-center text-muted-foreground">
               <CalendarIcon className="h-5 w-5 mr-2" />
@@ -296,7 +323,6 @@ const EventPage = () => {
             )}
           </div>
           
-          {/* Tags section */}
           <div className="space-y-2">
             <div className="flex items-center text-muted-foreground">
               <TagIcon className="h-5 w-5 mr-2" />
@@ -306,8 +332,32 @@ const EventPage = () => {
             <div className="flex flex-wrap gap-2">
               {tags.length > 0 ? (
                 tags.map(tag => (
-                  <div key={tag} className="bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm flex items-center">
-                    {tag}
+                  <div key={tag} className="flex items-center">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <div 
+                          className={`${
+                            event?.tagColors?.[tag] 
+                              ? getTagColorClass(event.tagColors[tag]) 
+                              : getTagColorClass(getTagColor(tag))
+                          } text-secondary-foreground px-3 py-1 rounded-full text-sm flex items-center gap-2 cursor-pointer`}
+                        >
+                          {tag}
+                          <PaletteIcon className="h-3 w-3 opacity-50" />
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-32 p-1" align="start">
+                        <div className="grid grid-cols-4 gap-1">
+                          {(Object.keys(TAG_COLORS) as TagColor[]).map((color) => (
+                            <button
+                              key={color}
+                              onClick={() => handleTagColorChange(tag, color)}
+                              className={`${getTagColorClass(color)} w-6 h-6 rounded-full hover:ring-2 hover:ring-ring hover:ring-offset-1`}
+                            />
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                     {isEditMode && (
                       <button
                         onClick={() => removeTag(tag)}
@@ -344,7 +394,6 @@ const EventPage = () => {
             </div>
           </div>
           
-          {/* Collaborators section */}
           <div className="space-y-2">
             <div className="flex items-center text-muted-foreground">
               <UsersIcon className="h-5 w-5 mr-2" />
@@ -392,7 +441,6 @@ const EventPage = () => {
             </div>
           </div>
           
-          {/* Notes section */}
           <div className="space-y-2">
             <div className="flex items-center text-muted-foreground">
               <CalendarIcon className="h-5 w-5 mr-2" />
@@ -415,7 +463,6 @@ const EventPage = () => {
         </div>
       </main>
       
-      {/* Delete confirmation dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
