@@ -227,6 +227,7 @@ const Dashboard = () => {
                 <th className="text-left px-4 py-3 text-sm font-medium text-muted-foreground">Event Name</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-muted-foreground">Date</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-muted-foreground hidden md:table-cell">Tags</th>
+                <th className="text-left px-4 py-3 text-sm font-medium text-muted-foreground hidden md:table-cell">Notes</th>
                 <th className="text-left px-4 py-3 text-sm font-medium text-muted-foreground hidden md:table-cell">Collaborators</th>
                 <th className="text-right px-4 py-3 text-sm font-medium text-muted-foreground">Actions</th>
               </tr>
@@ -244,6 +245,13 @@ const Dashboard = () => {
                         </span>
                       ))}
                     </div>
+                  </td>
+                  <td className="px-4 py-3 hidden md:table-cell">
+                    {event.notes ? (
+                      <span className="text-sm text-muted-foreground line-clamp-2">{event.notes}</span>
+                    ) : (
+                      <span className="text-sm text-muted-foreground italic">No notes</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">{event.collaborators.join(", ")}</td>
                   <td className="px-4 py-3 text-right">
