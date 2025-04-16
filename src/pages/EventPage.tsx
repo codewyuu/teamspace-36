@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { format } from "date-fns";
@@ -119,8 +118,10 @@ const EventPage = () => {
         name,
         date,
         notes,
+        description: event?.description || "",
         tags,
-        collaborators
+        collaborators,
+        comments: event?.comments || []
       };
       
       // Replace the event in the array

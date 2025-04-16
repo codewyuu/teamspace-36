@@ -22,15 +22,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import ImportExportDialog from "@/components/ImportExportDialog";
-
-interface Event {
-  id: string;
-  name: string;
-  date: Date;
-  notes: string;
-  tags: string[];
-  collaborators: string[];
-}
+import { Event, Comment } from "@/types/event";
 
 const initialEvents: Event[] = [
   {
@@ -38,16 +30,20 @@ const initialEvents: Event[] = [
     name: "Annual Conference",
     date: new Date("2024-05-15"),
     notes: "Main conference for the year, need to prepare presentation materials",
+    description: "Annual industry conference focusing on new technologies",
     tags: ["conference", "important"],
     collaborators: ["Alex Smith", "Jamie Lee"],
+    comments: []
   },
   {
     id: "2",
     name: "Team Building",
     date: new Date("2024-04-30"),
     notes: "Outdoor activities planned, check weather forecast",
+    description: "Team bonding activity at the local park",
     tags: ["team", "outdoor"],
     collaborators: ["Jamie Lee", "Taylor Wong"],
+    comments: []
   }
 ];
 

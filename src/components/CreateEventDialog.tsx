@@ -33,6 +33,7 @@ const CreateEventDialog: React.FC<CreateEventDialogProps> = ({
   const [name, setName] = useState("");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [notes, setNotes] = useState("");
+  const [description, setDescription] = useState("");
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [collaborator, setCollaborator] = useState("");
@@ -46,8 +47,10 @@ const CreateEventDialog: React.FC<CreateEventDialogProps> = ({
       name: name.trim(),
       date: date,
       notes: notes.trim(),
+      description: description.trim(),
       tags,
-      collaborators
+      collaborators,
+      comments: []
     };
 
     onCreateEvent(newEvent);
@@ -80,6 +83,7 @@ const CreateEventDialog: React.FC<CreateEventDialogProps> = ({
     setName("");
     setDate(new Date());
     setNotes("");
+    setDescription("");
     setTag("");
     setTags([]);
     setCollaborator("");
@@ -128,6 +132,17 @@ const CreateEventDialog: React.FC<CreateEventDialogProps> = ({
                 />
               </PopoverContent>
             </Popover>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              placeholder="Add a general description of the event"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="min-h-24"
+            />
           </div>
           
           <div className="space-y-2">
