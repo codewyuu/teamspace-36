@@ -12,6 +12,7 @@ import { Event, Comment } from "@/types/event";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PaletteIcon } from "lucide-react";
 import { TAG_COLORS, TagColor, getTagColor, getTagColorClass } from "@/utils/tagColors";
+import { CommentSection } from "@/components/comments/CommentSection";
 
 const initialEvents: Event[] = [{
   id: "1",
@@ -110,7 +111,8 @@ const Dashboard = () => {
     localStorage.setItem("eventscribe-events", JSON.stringify(updatedEvents));
   };
 
-  return <div className="min-h-screen bg-background">
+  return (
+    <div className="min-h-screen bg-background">
       <header className="border-b border-border sticky top-0 z-10 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between p-4 notion-container">
           <div className="flex items-center gap-2">
@@ -276,8 +278,14 @@ const Dashboard = () => {
         </div>
       </main>
 
+      <div className="notion-container py-8 border-t">
+        <h2 className="text-2xl font-bold mb-6">Comments</h2>
+        <CommentSection />
+      </div>
+
       <ImportExportDialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen} events={getEvents()} onImport={handleImportEvents} />
-    </div>;
+    </div>
+  );
 };
 
 export default Dashboard;
