@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,7 +46,7 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
     const dataStr = JSON.stringify(events, null, 2);
     const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
     
-    const exportFileDefaultName = `teamspace-export-${new Date().toISOString().slice(0, 10)}.json`;
+    const exportFileDefaultName = `teamspace-export-${new Date().toISOString().slice(0, 10)}.json";
     
     const linkElement = document.createElement("a");
     linkElement.setAttribute("href", dataUri);
@@ -113,18 +112,15 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
     }
   ], null, 2);
 
-  // Handle dialog close with cleanup
-  const handleDialogChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      // Ensure state is reset when dialog closes
-      setImportData("");
-    }
-    onOpenChange(newOpen);
-  };
-
   return (
-    <Dialog open={open} onOpenChange={handleDialogChange}>
-      <DialogContent className="sm:max-w-[650px]">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent 
+        className="sm:max-w-[650px]"
+        onInteractOutside={(e) => {
+          e.preventDefault();
+          onOpenChange(false);
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Import / Export Events</DialogTitle>
         </DialogHeader>
