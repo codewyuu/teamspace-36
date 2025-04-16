@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,7 +47,7 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({
     const dataStr = JSON.stringify(events, null, 2);
     const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
     
-    const exportFileDefaultName = `teamspace-export-${new Date().toISOString().slice(0, 10)}.json";
+    const exportFileDefaultName = `teamspace-export-${new Date().toISOString().slice(0, 10)}.json`;
     
     const linkElement = document.createElement("a");
     linkElement.setAttribute("href", dataUri);
