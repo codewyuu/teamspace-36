@@ -24,17 +24,19 @@ export function CommentBox({ onSubmit }: { onSubmit: (content: string) => void }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <Textarea
-        placeholder="Add a comment..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="min-h-[80px] bg-background resize-none border-border/50 focus-visible:ring-accent"
-      />
+      <div className="relative">
+        <Textarea
+          placeholder="Add a comment..."
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="w-full min-h-[80px] bg-black/10 dark:bg-white/10 border-none rounded-2xl px-4 py-3 text-sm resize-none focus:ring-2 focus:ring-accent/50 outline-none transition-all duration-300"
+        />
+      </div>
       <div className="flex justify-end">
         <Button 
           type="submit"
           size="sm"
-          className="text-xs bg-accent hover:bg-accent/90"
+          className="text-xs bg-accent hover:bg-accent/90 rounded-full px-4 py-2"
         >
           Comment
         </Button>
