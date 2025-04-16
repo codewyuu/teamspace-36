@@ -3,57 +3,42 @@ import { Link } from "react-router-dom";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  PlusIcon, 
-  SearchIcon, 
-  CalendarIcon, 
-  Settings2Icon,
-  MoonIcon,
-  SunIcon,
-  LogOutIcon,
-  FileText
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { PlusIcon, SearchIcon, CalendarIcon, Settings2Icon, MoonIcon, SunIcon, LogOutIcon, FileText } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import ImportExportDialog from "@/components/ImportExportDialog";
 import { Event, Comment } from "@/types/event";
-
-const initialEvents: Event[] = [
-  {
-    id: "1",
-    name: "Annual Conference",
-    date: new Date("2024-05-15"),
-    notes: "Main conference for the year, need to prepare presentation materials",
-    description: "Annual industry conference focusing on new technologies",
-    tags: ["conference", "important"],
-    collaborators: ["Alex Smith", "Jamie Lee"],
-    comments: []
-  },
-  {
-    id: "2",
-    name: "Team Building",
-    date: new Date("2024-04-30"),
-    notes: "Outdoor activities planned, check weather forecast",
-    description: "Team bonding activity at the local park",
-    tags: ["team", "outdoor"],
-    collaborators: ["Jamie Lee", "Taylor Wong"],
-    comments: []
-  }
-];
-
+const initialEvents: Event[] = [{
+  id: "1",
+  name: "Annual Conference",
+  date: new Date("2024-05-15"),
+  notes: "Main conference for the year, need to prepare presentation materials",
+  description: "Annual industry conference focusing on new technologies",
+  tags: ["conference", "important"],
+  collaborators: ["Alex Smith", "Jamie Lee"],
+  comments: []
+}, {
+  id: "2",
+  name: "Team Building",
+  date: new Date("2024-04-30"),
+  notes: "Outdoor activities planned, check weather forecast",
+  description: "Team bonding activity at the local park",
+  tags: ["team", "outdoor"],
+  collaborators: ["Jamie Lee", "Taylor Wong"],
+  comments: []
+}];
 const Dashboard = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const { theme, setTheme } = useTheme();
-  const { toast } = useToast();
+  const {
+    theme,
+    setTheme
+  } = useTheme();
+  const {
+    toast
+  } = useToast();
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
-
   useEffect(() => {
     const savedEvents = localStorage.getItem("eventscribe-events");
     if (savedEvents) {
@@ -71,59 +56,42 @@ const Dashboard = () => {
       setEvents(initialEvents);
     }
   }, []);
-
   useEffect(() => {
     if (events.length > 0) {
       localStorage.setItem("eventscribe-events", JSON.stringify(events));
     }
   }, [events]);
-
-  const filteredEvents = events.filter((event) => {
+  const filteredEvents = events.filter(event => {
     const searchLower = searchTerm.toLowerCase();
-    return (
-      event.name.toLowerCase().includes(searchLower) ||
-      event.notes.toLowerCase().includes(searchLower) ||
-      event.tags.some(tag => tag.toLowerCase().includes(searchLower)) ||
-      event.collaborators.some(collab => collab.toLowerCase().includes(searchLower))
-    );
+    return event.name.toLowerCase().includes(searchLower) || event.notes.toLowerCase().includes(searchLower) || event.tags.some(tag => tag.toLowerCase().includes(searchLower)) || event.collaborators.some(collab => collab.toLowerCase().includes(searchLower));
   });
-
   const handleLogout = () => {
     localStorage.removeItem("eventscribe-auth");
     window.location.href = "/login";
   };
-
   const getEvents = () => {
     return events;
   };
-
   const handleImportEvents = (importedEvents: any[]) => {
     setEvents(importedEvents);
     localStorage.setItem("eventscribe-events", JSON.stringify(importedEvents));
     toast({
       title: "Events imported",
-      description: `Successfully imported ${importedEvents.length} events.`,
+      description: `Successfully imported ${importedEvents.length} events.`
     });
   };
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <header className="border-b border-border sticky top-0 z-10 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between p-4 notion-container">
           <div className="flex items-center gap-2">
             <CalendarIcon className="h-6 w-6" />
-            <h1 className="text-xl font-semibold">teamspace</h1>
+            <h1 className="text-xl font-extrabold">teamspace</h1>
           </div>
           
           <div className="flex items-center gap-3">
             <div className="relative w-64 hidden md:block">
               <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Search events..." 
-                className="pl-10" 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              <Input placeholder="Search events..." className="pl-10" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
             </div>
 
             <DropdownMenu>
@@ -169,12 +137,7 @@ const Dashboard = () => {
       <div className="md:hidden p-4 notion-container">
         <div className="relative">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input 
-            placeholder="Search events..." 
-            className="pl-10" 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <Input placeholder="Search events..." className="pl-10" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         </div>
       </div>
 
@@ -233,25 +196,18 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredEvents.map((event) => (
-                <tr key={event.id} className="border-t border-border">
+              {filteredEvents.map(event => <tr key={event.id} className="border-t border-border">
                   <td className="px-4 py-3">{event.name}</td>
                   <td className="px-4 py-3">{event.date.toLocaleDateString()}</td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     <div className="flex flex-wrap gap-1">
-                      {event.tags.map((tag) => (
-                        <span key={tag} className="bg-secondary text-secondary-foreground text-xs rounded-full px-2 py-0.5">
+                      {event.tags.map(tag => <span key={tag} className="bg-secondary text-secondary-foreground text-xs rounded-full px-2 py-0.5">
                           {tag}
-                        </span>
-                      ))}
+                        </span>)}
                     </div>
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
-                    {event.notes ? (
-                      <span className="text-sm text-muted-foreground line-clamp-2">{event.notes}</span>
-                    ) : (
-                      <span className="text-sm text-muted-foreground italic">No notes</span>
-                    )}
+                    {event.notes ? <span className="text-sm text-muted-foreground line-clamp-2">{event.notes}</span> : <span className="text-sm text-muted-foreground italic">No notes</span>}
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">{event.collaborators.join(", ")}</td>
                   <td className="px-4 py-3 text-right">
@@ -259,26 +215,16 @@ const Dashboard = () => {
                       <Link to={`/event/${event.id}`}>View</Link>
                     </Button>
                   </td>
-                </tr>
-              ))}
+                </tr>)}
             </tbody>
           </table>
-          {filteredEvents.length === 0 && (
-            <div className="text-center py-8">
+          {filteredEvents.length === 0 && <div className="text-center py-8">
               <p className="text-muted-foreground">No events found</p>
-            </div>
-          )}
+            </div>}
         </div>
       </main>
 
-      <ImportExportDialog
-        open={isExportDialogOpen}
-        onOpenChange={setIsExportDialogOpen}
-        events={getEvents()}
-        onImport={handleImportEvents}
-      />
-    </div>
-  );
+      <ImportExportDialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen} events={getEvents()} onImport={handleImportEvents} />
+    </div>;
 };
-
 export default Dashboard;
